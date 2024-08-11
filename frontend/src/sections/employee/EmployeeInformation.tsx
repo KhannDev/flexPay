@@ -6,13 +6,13 @@ import Box from '@mui/material/Box'
 import { Button, Paper } from '@mui/material'
 
 import WorldID from './WorldID'
-import { fetchEmployee } from '@/services/read-services'
+import { fetchFreelancer } from '@/services/read-services'
 import { useState } from 'react'
 import { Employee } from '@/state/types'
 import moment from 'moment'
 import { formatEther } from 'viem'
 import Iconify from '@/components/iconify'
-import EnsName from '@/components/ens-name'
+
 import { paySalary } from '@/services/write-services'
 import { toast } from 'react-toastify'
 import { useEnsAvatar } from 'wagmi'
@@ -23,15 +23,14 @@ import { getEnsName } from '@wagmi/core'
 import { sepolia } from 'wagmi/chains'
 import { config } from '@/config'
 
-
 type Props = {
   address: `0x${string}`
 }
 export default function EmployeeInformation({ address }: Props) {
-  const [employeeInfo, setEmployeeInfo] = useState<Employee | undefined>(undefined);
+  const [employeeInfo, setEmployeeInfo] = useState<Employee | undefined>(undefined)
   const [ensName, setEnsName] = useState<string>('')
-  const [employeeAvatar, setEmployeeAvatar] = useState<string>("")
-  console.log("hahaaa")
+  const [employeeAvatar, setEmployeeAvatar] = useState<string>('')
+  console.log('hahaaa')
   getEnsName(config, {
     chainId: sepolia.id,
     address,
@@ -42,12 +41,7 @@ export default function EmployeeInformation({ address }: Props) {
     setEnsName(ensName)
   })
 
-  const { data, isError, isLoading } = useEnsAvatar({
-    name: ensName,
-  })
-
-
-  fetchEmployee(address).then((employee) => {
+  fetchFreelancer(address).then((employee) => {
     setEmployeeInfo(employee)
     console.log(employee)
   })
@@ -75,22 +69,10 @@ export default function EmployeeInformation({ address }: Props) {
           <Paper elevation={24}>
             <div className="paper">
               <div className="employeeUserSide">
-                <Paper elevation={24}>
-                  <Box
-                    component="img"
-                    sx={{
-                      height: 200,
-                      width: 200,
-                      boxShadow: 5,
-                    }}
-                    alt="The house from the offer."
-                    src={data ? data : "/loading.webp"}
-                  />
-                </Paper>
                 <div>
-                  <p className="ensName">
+                  {/* <p className="ensName">
                     <EnsName address={employeeInfo.address} />
-                  </p>
+                  </p> */}
                 </div>
                 <div>{address.substring(0, 15)}...</div>
               </div>
@@ -98,8 +80,8 @@ export default function EmployeeInformation({ address }: Props) {
                 <div className="employeeData">
                   <div className="employeeDataLabels">
                     <ul className="employeeDataLabels">
-                      <li>🗓️ Days worked:</li>
-                      <li>💰 Day Wage:</li>
+                      <li>🗓️ Weeks worked:</li>
+                      <li>💰 Weeks Wage:</li>
                       <li>⚙️ Activity:</li>
                       <li>🌎 World ID:</li>
                     </ul>
@@ -118,29 +100,31 @@ export default function EmployeeInformation({ address }: Props) {
                 </div>
                 <div className="totalBalance">
                   <p className="balancep">
-                    Balance: <span className="value">{formatEther(BigInt(employeeInfo.daysWorked * employeeInfo.salary))} Ξ</span>
+                    Balance:{' '}
+                    <span className="value">
+                      {formatEther(BigInt(employeeInfo.daysWorked * employeeInfo.salary))} Ξ
+                    </span>
                   </p>
                   <Button
                     style={{ minWidth: '200px', minHeight: '35px' }}
                     variant="contained"
                     color="success"
-                    disabled={!employeeInfo.verified}
                     onClick={async () => {
                       try {
                         const tx = await paySalary(address)
                         toast.success(`🦄 salary payment transaction submitted! transaction: ${tx}`)
                       } catch (error) {
                         console.error(error)
-                        // toast.error(`Payment failed: ${error}`, {
-                        //   position: 'top-right',
-                        //   autoClose: 5000,
-                        //   hideProgressBar: false,
-                        //   closeOnClick: true,
-                        //   pauseOnHover: true,
-                        //   draggable: true,
-                        //   progress: undefined,
-                        //   theme: 'light',
-                        // })
+                        toast.error(`Payment failed: ${error}`, {
+                          position: 'top-right',
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: 'light',
+                        })
                       }
                     }}
                   >

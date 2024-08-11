@@ -23,13 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ApolloProvider>
-          <AppStateProvider>
-            <ThemeProvider>
-              <Web3ModalProvider>{children}</Web3ModalProvider>
-            </ThemeProvider>
-          </AppStateProvider>
-        </ApolloProvider>
+        <AppStateProvider>
+          <ThemeProvider>
+            <Web3ModalProvider>{children}</Web3ModalProvider>
+          </ThemeProvider>
+        </AppStateProvider>
+
         <ToastContainer />
       </body>
     </html>

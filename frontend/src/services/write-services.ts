@@ -1,4 +1,4 @@
-import { baseSepolia } from 'viem/chains'
+import { baseSepolia, sepolia } from 'viem/chains'
 import payrollAbi from '@/config/payrollAbi'
 import { writeContract } from '@wagmi/core'
 import { config } from '@/config'
@@ -6,10 +6,11 @@ import { Address } from '@/state/types'
 import { PAYROLL_CONTRACT_ADDRESS } from '@/config/constants'
 
 export async function createOrg(name: string) {
+  console.log('baseId,sepolia', baseSepolia.id, sepolia.id)
   const result = await writeContract(config, {
     chainId: baseSepolia.id,
     abi: payrollAbi,
-    functionName: 'addCompany',
+    functionName: 'addClient',
     args: [name],
     address: PAYROLL_CONTRACT_ADDRESS,
   })
@@ -17,11 +18,11 @@ export async function createOrg(name: string) {
   return result
 }
 
-export async function addNewEmployee(address: Address, salary: number, activity: string) {
+export async function addNewFreelancer(address: Address, salary: number, activity: string) {
   const result = await writeContract(config, {
     chainId: baseSepolia.id,
     abi: payrollAbi,
-    functionName: 'addEmployee',
+    functionName: 'addFreelancer',
     args: [address, BigInt(salary), activity],
     address: PAYROLL_CONTRACT_ADDRESS,
   })
@@ -33,7 +34,7 @@ export async function verifyEmployee(address: Address) {
   const result = await writeContract(config, {
     chainId: baseSepolia.id,
     abi: payrollAbi,
-    functionName: 'verifyEmployee',
+    functionName: 'verifyFreelancer',
     args: [address],
     address: PAYROLL_CONTRACT_ADDRESS,
   })

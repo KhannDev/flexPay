@@ -5,17 +5,17 @@ const abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'companyAddress',
+        name: 'clientAddress',
         type: 'address',
       },
       {
         indexed: false,
         internalType: 'string',
-        name: 'companyName',
+        name: 'clientName',
         type: 'string',
       },
     ],
-    name: 'CompanyAdded',
+    name: 'ClientAdded',
     type: 'event',
   },
   {
@@ -24,7 +24,7 @@ const abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'companyAddress',
+        name: 'clientAddress',
         type: 'address',
       },
       {
@@ -34,7 +34,7 @@ const abi = [
         type: 'uint256',
       },
     ],
-    name: 'CompanyFunded',
+    name: 'ClientFunded',
     type: 'event',
   },
   {
@@ -43,38 +43,19 @@ const abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'employeeAddress',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'daysWorked',
-        type: 'uint256',
-      },
-    ],
-    name: 'DaysWorkedUpdated',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'employeeAddress',
+        name: 'freelancerAddress',
         type: 'address',
       },
       {
         indexed: true,
         internalType: 'address',
-        name: 'companyAddress',
+        name: 'clientAddress',
         type: 'address',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'dailyWageWei',
+        name: 'weeklyWageWei',
         type: 'uint256',
       },
       {
@@ -84,7 +65,7 @@ const abi = [
         type: 'string',
       },
     ],
-    name: 'EmployeeAdded',
+    name: 'FreelancerAdded',
     type: 'event',
   },
   {
@@ -93,11 +74,11 @@ const abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'employeeAddress',
+        name: 'freelancerAddress',
         type: 'address',
       },
     ],
-    name: 'EmployeeVerified',
+    name: 'FreelancerVerified',
     type: 'event',
   },
   {
@@ -106,7 +87,7 @@ const abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'employeeAddress',
+        name: 'freelancerAddress',
         type: 'address',
       },
       {
@@ -120,14 +101,33 @@ const abi = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'freelancerAddress',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'weeksWorked',
+        type: 'uint256',
+      },
+    ],
+    name: 'WeeksWorkedUpdated',
+    type: 'event',
+  },
+  {
     inputs: [
       {
         internalType: 'string',
-        name: '_companyName',
+        name: '_clientName',
         type: 'string',
       },
     ],
-    name: 'addCompany',
+    name: 'addClient',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -136,12 +136,12 @@ const abi = [
     inputs: [
       {
         internalType: 'address',
-        name: '_employeeAddress',
+        name: '_freelancerAddress',
         type: 'address',
       },
       {
         internalType: 'uint256',
-        name: '_dailyWageWei',
+        name: '_weeklyWageWei',
         type: 'uint256',
       },
       {
@@ -150,7 +150,7 @@ const abi = [
         type: 'string',
       },
     ],
-    name: 'addEmployee',
+    name: 'addFreelancer',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -163,16 +163,16 @@ const abi = [
         type: 'address',
       },
     ],
-    name: 'companies',
+    name: 'clients',
     outputs: [
       {
         internalType: 'address',
-        name: 'companyAddress',
+        name: 'clientAddress',
         type: 'address',
       },
       {
         internalType: 'string',
-        name: 'companyName',
+        name: 'clientName',
         type: 'string',
       },
       {
@@ -187,31 +187,50 @@ const abi = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'freelancerAddresses',
+    outputs: [
+      {
         internalType: 'address',
         name: '',
         type: 'address',
       },
     ],
-    name: 'employees',
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'freelancers',
     outputs: [
       {
         internalType: 'address',
-        name: 'employeeAddress',
+        name: 'freelancerAddress',
         type: 'address',
       },
       {
         internalType: 'address',
-        name: 'companyAddress',
+        name: 'clientAddress',
         type: 'address',
       },
       {
         internalType: 'uint256',
-        name: 'dailyWageWei',
+        name: 'weeklyWageWei',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: 'daysWorked',
+        name: 'weeksWorked',
         type: 'uint256',
       },
       {
@@ -230,7 +249,7 @@ const abi = [
   },
   {
     inputs: [],
-    name: 'fundCompany',
+    name: 'fundClient',
     outputs: [],
     stateMutability: 'payable',
     type: 'function',
@@ -239,22 +258,22 @@ const abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'companyAddress',
+        name: 'clientAddress',
         type: 'address',
       },
     ],
-    name: 'getCompany',
+    name: 'getClient',
     outputs: [
       {
         components: [
           {
             internalType: 'address',
-            name: 'companyAddress',
+            name: 'clientAddress',
             type: 'address',
           },
           {
             internalType: 'string',
-            name: 'companyName',
+            name: 'clientName',
             type: 'string',
           },
           {
@@ -263,7 +282,7 @@ const abi = [
             type: 'uint256',
           },
         ],
-        internalType: 'struct SimplePayroll.Company',
+        internalType: 'struct SimplePayroll.Client',
         name: '',
         type: 'tuple',
       },
@@ -275,32 +294,32 @@ const abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'employeeAddress',
+        name: 'freelancerAddress',
         type: 'address',
       },
     ],
-    name: 'getEmployee',
+    name: 'getFreelancer',
     outputs: [
       {
         components: [
           {
             internalType: 'address',
-            name: 'employeeAddress',
+            name: 'freelancerAddress',
             type: 'address',
           },
           {
             internalType: 'address',
-            name: 'companyAddress',
+            name: 'clientAddress',
             type: 'address',
           },
           {
             internalType: 'uint256',
-            name: 'dailyWageWei',
+            name: 'weeklyWageWei',
             type: 'uint256',
           },
           {
             internalType: 'uint256',
-            name: 'daysWorked',
+            name: 'weeksWorked',
             type: 'uint256',
           },
           {
@@ -314,9 +333,54 @@ const abi = [
             type: 'string',
           },
         ],
-        internalType: 'struct SimplePayroll.Employee',
+        internalType: 'struct SimplePayroll.Freelancer',
         name: '',
         type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getFreelancers',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'freelancerAddress',
+            type: 'address',
+          },
+          {
+            internalType: 'address',
+            name: 'clientAddress',
+            type: 'address',
+          },
+          {
+            internalType: 'uint256',
+            name: 'weeklyWageWei',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'weeksWorked',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint8',
+            name: 'worldidverified',
+            type: 'uint8',
+          },
+          {
+            internalType: 'string',
+            name: 'activity',
+            type: 'string',
+          },
+        ],
+        internalType: 'struct SimplePayroll.Freelancer[]',
+        name: '',
+        type: 'tuple[]',
       },
     ],
     stateMutability: 'view',
@@ -326,7 +390,7 @@ const abi = [
     inputs: [
       {
         internalType: 'address',
-        name: '_employeeAddress',
+        name: '_freelancerAddress',
         type: 'address',
       },
     ],
@@ -339,16 +403,16 @@ const abi = [
     inputs: [
       {
         internalType: 'address',
-        name: '_employeeAddress',
+        name: '_freelancerAddress',
         type: 'address',
       },
       {
         internalType: 'uint256',
-        name: '_daysWorked',
+        name: '_weeksWorked',
         type: 'uint256',
       },
     ],
-    name: 'updateDaysWorked',
+    name: 'updateWeeksWorked',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -357,11 +421,11 @@ const abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'employeeAccount',
+        name: 'freelancerAccount',
         type: 'address',
       },
     ],
-    name: 'verifyEmployee',
+    name: 'verifyFreelancer',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

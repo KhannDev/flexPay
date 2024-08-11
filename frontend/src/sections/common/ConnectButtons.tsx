@@ -5,6 +5,7 @@ import { setRole } from '@/state/app'
 import { useAppDispatch } from '@/state/hooks'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { Typography } from '@mui/material'
 
 export default function ConnectButtons() {
   const dispatch = useAppDispatch()
@@ -30,7 +31,7 @@ export default function ConnectButtons() {
           open({ view: 'Connect' })
         }}
       >
-        Employee
+        Freelancer
       </Button>
       <Button
         variant="contained"
@@ -40,7 +41,7 @@ export default function ConnectButtons() {
           open({ view: 'Connect' })
         }}
       >
-        Employer
+        Organization
       </Button>
     </Box>
   )

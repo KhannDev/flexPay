@@ -22,10 +22,9 @@ type ItemProps = {
 interface Props extends CardProps {
   title?: string
   subheader?: string
-  list: ItemProps[]
 }
 
-export default function OrganizationTimeline({ title, subheader, list, ...other }: Props) {
+export default function OrganizationTimeline({ title, subheader, ...other }: Props) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
@@ -40,9 +39,9 @@ export default function OrganizationTimeline({ title, subheader, list, ...other 
           },
         }}
       >
-        {list.map((item, index) => (
+        {/* {list.map((item, index) => (
           <OrderItem key={item.id} item={item} lastTimeline={index === list.length - 1} />
-        ))}
+        ))} */}
       </Timeline>
     </Card>
   )

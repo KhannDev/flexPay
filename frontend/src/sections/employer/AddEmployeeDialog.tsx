@@ -15,13 +15,12 @@ import { ReturnType } from '@/hooks/use-boolean'
 import { Address, Organization } from '@/state/types'
 import { InputAdornment } from '@mui/material'
 import { useRef, useState } from 'react'
-import { addNewEmployee } from '@/services/write-services'
+import { addNewFreelancer } from '@/services/write-services'
 import { config } from '@/config'
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  organization: Organization
   dialog: ReturnType
 }
 
@@ -38,7 +37,12 @@ export default function AddEmployeeDialog({ organization, dialog }: Props) {
   const onAddEmployee = async () => {
     if (!employeeAddress || !salary || !activity) return
     try {
-      const tx = await addNewEmployee(employeeAddress as Address, salary * 1000000000000000000, activity)
+      console.log(employeeAddress, salary, activity)
+      const tx = await addNewFreelancer(
+        employeeAddress as Address,
+        salary * 1000000000000000000,
+        activity,
+      )
       toast.success(`Add employee transaction submitted. transaction: ${tx}`)
     } catch (err) {
       toast.error(`Add employee: ${error}`)
@@ -81,12 +85,10 @@ export default function AddEmployeeDialog({ organization, dialog }: Props) {
   return (
     <div>
       <Dialog open={dialog.value} onClose={dialog.onFalse}>
-        <DialogTitle>New Employee</DialogTitle>
+        <DialogTitle>New Freelancer</DialogTitle>
 
         <DialogContent>
-          <Typography sx={{ mb: 3 }}>
-            After adding an employee, they must verify their personhood with World ID before receiving payments.
-          </Typography>
+          <Typography sx={{ mb: 3 }}>Add the Freelancer.</Typography>
 
           <TextField
             autoFocus
@@ -106,7 +108,7 @@ export default function AddEmployeeDialog({ organization, dialog }: Props) {
             type="number"
             margin="dense"
             variant="outlined"
-            label="Daily salary"
+            label="Weekly salary"
             value={salary}
             onChange={(e) => setSalary(Number(e.target.value))}
             InputProps={{

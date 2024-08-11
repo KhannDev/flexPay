@@ -62,7 +62,7 @@ export default function Header() {
               variant="h4"
               sx={{ display: { xs: 'none', md: 'block' }, textTransform: 'capitalize' }}
             >
-              {organization?.orgName || "Sweet Drinks Ltd."}
+              Organization A
             </Typography>
             Balance: {formatEther(BigInt(organization?.orgTreasury ?? 0))}ETH
           </Stack>
@@ -82,7 +82,7 @@ export default function Header() {
                   marginBottom: '-5px',
                 }}
               >
-                {role}
+                {/* {role} */}
               </Typography>
               <w3m-button balance="hide" />
             </Stack>

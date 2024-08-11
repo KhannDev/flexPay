@@ -14,14 +14,15 @@ import Iconify from '@/components/iconify'
 import moment from 'moment'
 import { useBoolean } from '@/hooks/use-boolean'
 import AddEmployeeDialog from './AddEmployeeDialog'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { setOrganization } from '@/state/app'
 import { selectOrganization } from '@/state/selectors'
 import OrganizationTimeline from './OrganizationTimeLine'
 import { EMPLOYEE_ADDS, GET_EMPLOYEES, ORG_ADDED, ORG_FUNDED } from './graph-queries'
-import EnsName from '@/components/ens-name'
+
 import { formatEther } from 'viem'
 import { paySalary } from '@/services/write-services'
+import { fetchFreelancers } from '@/services/read-services'
 
 // ----------------------------------------------------------------------
 const columns: GridColDef[] = [
@@ -29,7 +30,6 @@ const columns: GridColDef[] = [
     field: 'name',
     headerName: 'Name',
     width: 120,
-    renderCell: (params) => <EnsName address={params.row.address} />,
   },
   {
     field: 'address',
@@ -119,7 +119,8 @@ type DataGridProps = {
   data: Employee[]
 }
 
-export function EmployeeDataGrid({ data }: DataGridProps) {
+export function EmployeeDataGrid({ data }: any) {
+  console.log('In the employeee grid', data)
   return (
     <DataGrid
       columns={columns}
@@ -136,51 +137,7 @@ type Props = {
 }
 
 function OrganizationEvents({ address }: Props) {
-  const dispatch = useAppDispatch()
-  const org = useAppSelector(selectOrganization)
-
-  const { data: employeesAdded } = useQuery(EMPLOYEE_ADDS, {
-    variables: {
-      companyAddress: address,
-    },
-  })
-  const { data: orgAdded } = useQuery(ORG_ADDED, { variables: { address } })
-  const { data: orgFunded } = useQuery(ORG_FUNDED, { variables: { address } })
-
-  const events = useMemo(() => {
-    const results = []
-    if (orgAdded && orgAdded.companyAddeds?.length) {
-      results.push({
-        id: orgAdded.companyAddeds[0].id,
-        title: 'Organization Created',
-        time: orgAdded.companyAddeds[0].blockTimestamp,
-        type: 'order1',
-      })
-    }
-    if (orgFunded) {
-      for (const funded of orgFunded.companyFundeds) {
-        results.push({
-          id: funded.id,
-          title: `Organization Funded ${formatEther(funded.amount)}ETH`,
-          time: funded.blockTimestamp,
-          type: 'order2',
-        })
-      }
-    }
-    if (employeesAdded) {
-      for (const employee of employeesAdded.employeeAddeds) {
-        results.push({
-          id: employee.id,
-          title: 'Employee Added',
-          time: employee.blockTimestamp,
-          type: 'order3',
-        })
-      }
-    }
-
-    return results.sort((a, b) => b.time - a.time)
-  }, [employeesAdded, orgAdded, orgFunded])
-  return <OrganizationTimeline title="Events" subheader="the history" list={events} />
+  return <OrganizationTimeline title="Events" subheader="the history" />
 }
 
 export default function OrganizationSection({ address }: Props) {
@@ -188,38 +145,28 @@ export default function OrganizationSection({ address }: Props) {
   const newEmployeeDialog = useBoolean()
   const org = useAppSelector(selectOrganization)
 
-  const { data } = useQuery(GET_EMPLOYEES, {
-    variables: {
-      companyAddress: address,
-    },
-  })
+  const [result, setResult] = useState(null) // State to store the result
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (org && data) {
-      const employees = data.employees.map(
-        (employee: {
-          employeeAddress: any
-          companyAddress: any
-          activity: any
-          dailyWageWei: any
-          verified: any
-          daysWorked: any
-        }) => ({
-          address: employee.employeeAddress,
-          orgAddress: employee.companyAddress,
-          activity: employee.activity,
-          salary: Number(employee.dailyWageWei),
-          verified: employee.verified,
-          daysWorked: employee.daysWorked,
-        }),
-      )
-      dispatch(setOrganization({ ...org, employees }))
+    const fetchData = async () => {
+      console.log('fetchData is running')
+      try {
+        const freelancers = await fetchFreelancers()
+        console.log('FREELANCERS in useEffect', freelancers)
+        setResult(freelancers) // Update state with fetched data
+      } catch (error) {
+        console.error('Error fetching freelancers in useEffect:', error)
+      } finally {
+        setLoading(false) // Set loading to false after fetching is done
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, dispatch])
 
-  if (!org) {
-    return <Typography textAlign={'center'}>Loading...</Typography>
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -227,7 +174,7 @@ export default function OrganizationSection({ address }: Props) {
       <Stack sx={{ width: '100%' }} spacing={2}>
         <Card>
           <CardHeader
-            title="Employees"
+            title="Freelancers"
             sx={{ mb: 2 }}
             action={
               <Button
@@ -236,18 +183,18 @@ export default function OrganizationSection({ address }: Props) {
                 sx={{ marginLeft: 'auto' }}
                 onClick={newEmployeeDialog.onTrue}
               >
-                New Employee
+                New Freelancer
               </Button>
             }
           />
 
           <Box sx={{ height: 390 }}>
-            <EmployeeDataGrid data={org.employees ?? []} />
+            <EmployeeDataGrid data={result ?? []} />
           </Box>
         </Card>
         {org && <OrganizationEvents address={address} />}
       </Stack>
-      <AddEmployeeDialog organization={org} dialog={newEmployeeDialog} />
+      <AddEmployeeDialog dialog={newEmployeeDialog} />
     </>
   )
 }

@@ -12,10 +12,10 @@ import { useAppDispatch, useAppSelector } from '@/state/hooks'
 import CreateOrganization from '@/sections/employer/CreateOrganization'
 import OrganizationSection from '@/sections/employer/OrganizationSection'
 import EmployeeSection from '@/sections/employee/EmployeeSection'
-import { fetchOrganization } from '@/services/read-services'
+import { fetchClient, fetchFreelancers } from '@/services/read-services'
 import { setOrganization } from '@/state/app'
 import Image from 'next/image'
-import { Divider } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 
 export default function Home() {
   const dispatch = useAppDispatch()
@@ -28,7 +28,8 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       if (!address) return
-      const org = await fetchOrganization(address)
+
+      const org = await fetchClient(address)
       dispatch(setOrganization(org))
       setLoading(false)
     }
@@ -42,27 +43,35 @@ export default function Home() {
         <Stack sx={{ width: '100%' }}>
           {isDisconnected && (
             <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+
+                  width: '100%',
+                  borderRadius: 1,
                 }}
               >
-                <Image src="/lemonpay.png" width="500" height="1000" />
-              </div>
+                <Typography
+                  variant="h1"
+                  sx={{ display: { xs: 'none', md: 'block' }, textTransform: 'capitalize' }}
+                >
+                  FlexPay
+                </Typography>
+              </Box>
 
               <ConnectButtons />
-              <Divider style={{ marginTop: "20px" }} />
-              <Typography style={{ marginTop: "10px", color: "gray", fontWeight: "bold" }} textAlign={'center'}>Powered By</Typography>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "10px"
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
-                <Image src="/partners.png" width="500" height="1000" />
+                <Image src="/logo1.jpg" width="500" height="1000" />
               </div>
+
+              <Divider style={{ marginTop: '20px' }} />
             </>
           )}
           {isConnecting && <Typography textAlign={'center'}>Connecting...</Typography>}
