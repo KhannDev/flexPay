@@ -44,4 +44,4 @@ FlexPay is a decentralized payment system designed to streamline weekly payments
 3. **Work Registration**: Freelancers log their work days.
 4. **Payment Trigger**: Freelancers can trigger the payment process anytime after work registration, ensuring timely and secure payment.
 
-Link to project smart contract:
+Link to project smart contract: https://base-sepolia.blockscout.com/address/0xBF1052e40A7e5d1228718B5065De1523bF3a32D3
